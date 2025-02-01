@@ -1,20 +1,24 @@
-
+// Delete FAQ with cache clearing
 const Faq = require('../models/faqModel');
+const { clearCache } = require('../config/redisClient');  // import caching method
 
 const deleteFAQ = async (req, res) => {
-    try {
-        const { id } = req.params; // Get FAQ ID from params
+  try {
+    const { id } = req.params; // Get FAQ ID from params
 
-        const faq = await Faq.findByIdAndDelete(id);
-        if (!faq) {
-            return res.status(404).json({ success: false, message: "FAQ not found." });
-        }
+    // Clear cache before deleting
+    await clearCache(`faq:${id}`);
 
-        res.json({ success: true, message: "FAQ deleted successfully." });
-    } catch (error) {
-        console.error("Error deleting FAQ:", error);
-        res.status(500).json({ success: false, message: "Error deleting FAQ.", error: error.message });
+    const faq = await Faq.findByIdAndDelete(id);
+    if (!faq) {
+      return res.status(404).json({ success: false, message: "FAQ not found." });
     }
+
+    res.json({ success: true, message: "FAQ deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting FAQ:", error);
+    res.status(500).json({ success: false, message: "Error deleting FAQ.", error: error.message });
+  }
 };
 
 module.exports = deleteFAQ;

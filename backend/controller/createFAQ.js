@@ -1,34 +1,28 @@
-
+// Create FAQ with caching
 const Faq = require('../models/faqModel');
 const { autoTranslate } = require('../utils/translateText');
+const { setCachedData, getCachedData, clearCache } = require('../config/redisClient');  // import caching methods
 
 const createFAQ = async (req, res) => {
   try {
     const { question, answer } = req.body;
 
-    
-
     const faq = new Faq({
       question: {
         text: question,
-        translations: {
-          
-        },
+        translations: {},
       },
       answer: {
         text: answer,
-        translations: {
-          
-        },
+        translations: {},
       },
     });
 
-
-
-    
     await autoTranslate(faq);
-
     await faq.save();
+
+    // Set cache after FAQ creation and translation
+    await setCachedData(`faq:${faq._id}`, faq);  // Caching the newly created FAQ
 
     res.status(201).json({
       success: true,
@@ -45,4 +39,4 @@ const createFAQ = async (req, res) => {
   }
 };
 
-module.exports =  createFAQ ;
+module.exports = createFAQ;
