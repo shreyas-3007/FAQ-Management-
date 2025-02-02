@@ -11,7 +11,7 @@ router.post("/admin-login",adminLogin);
 
 
 router.post("/faq",createFAQ);
-router.get("/faqs",getFAQ);
+router.get("/faq",getFAQ);
 router.put("/faq/:id",updateFAQ)
 router.delete("/faq/:id",deleteFAQ)
 

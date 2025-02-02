@@ -1,7 +1,8 @@
 // Create FAQ with caching
 const Faq = require('../models/faqModel');
 const { autoTranslate } = require('../utils/translateText');
-const { setCachedData, getCachedData, clearCache } = require('../config/redisClient');  // import caching methods
+const { setCachedData} = require('../utils/cache');  // import caching methods
+const { text } = require('express');
 
 const createFAQ = async (req, res) => {
   try {
@@ -10,11 +11,15 @@ const createFAQ = async (req, res) => {
     const faq = new Faq({
       question: {
         text: question,
-        translations: {},
+        translations: {
+          en:question,
+        },
       },
       answer: {
         text: answer,
-        translations: {},
+        translations: {
+          en:answer,
+        },
       },
     });
 

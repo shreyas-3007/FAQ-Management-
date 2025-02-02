@@ -1,43 +1,36 @@
-// Get FAQ with caching
 const Faq = require("../models/faqModel");
-const { getCachedData, setCachedData } = require('../config/redisClient');  // import caching methods
+const { getCachedData, setCachedData } = require("../utils/cache"); // import caching methods
 
 const getFAQ = async (req, res) => {
   try {
-    const lang = req.query.lang || 'en'; 
-    const cachedFAQs = await getCachedData('faqs');  // Check if all FAQs are cached
+    const lang = req.query.lang || "en";
+    const cacheKey = `faqs_${lang}`; // Language-specific cache key
+    const cachedFAQs = await getCachedData(cacheKey);
 
     if (cachedFAQs) {
-      // If cache exists, send the cached data
-      const translatedFAQs = cachedFAQs.map(faq => {
-        return {
-          _id: faq._id,
-          question: faq.question.translations[lang] || faq.question.text, 
-          answer: faq.answer.translations[lang] || faq.answer.text, 
-          createdAt: faq.createdAt
-        };
-      });
-      return res.status(200).json({ success: true, faqs: translatedFAQs });
+      return res.status(200).json({ success: true, faqs: cachedFAQs });
     }
 
-    // If not cached, fetch from DB and set cache
-    const faqs = await Faq.find(); 
-    const translatedFAQs = faqs.map(faq => {
-      return {
-        _id: faq._id,
-        question: faq.question.translations[lang] || faq.question.text, 
-        answer: faq.answer.translations[lang] || faq.answer.text, 
-        createdAt: faq.createdAt
-      };
-    });
+    // If not cached, fetch from DB
+    const faqs = await Faq.find();
+    const translatedFAQs = faqs.map((faq) => ({
+      _id: faq._id,
+      question: faq.question.translations?.[lang] || faq.question.text,
+      answer: faq.answer.translations?.[lang] || faq.answer.text,
+      createdAt: faq.createdAt,
+    }));
 
-    // Cache the FAQs
-    await setCachedData('faqs', translatedFAQs);
+    // Cache the language-specific FAQs
+    await setCachedData(cacheKey, translatedFAQs);
 
     res.status(200).json({ success: true, faqs: translatedFAQs });
   } catch (error) {
-    console.error('Error fetching FAQs:', error);
-    res.status(500).json({ success: false, message: 'Error fetching FAQs', error: error.message });
+    console.error("Error fetching FAQs:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching FAQs",
+      error: error.message,
+    });
   }
 };
 

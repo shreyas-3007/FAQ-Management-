@@ -13,6 +13,7 @@ app.get("/", (req, res) => {
   res.send("Backed Running Successfully");
 });
 
+module.exports = app;
 const PORT = 3000;
 
 connectDB().then(() => {

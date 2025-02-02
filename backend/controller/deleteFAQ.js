@@ -1,6 +1,6 @@
 // Delete FAQ with cache clearing
 const Faq = require('../models/faqModel');
-const { clearCache } = require('../config/redisClient');  // import caching method
+const { clearCache } = require('../utils/cache');  // import caching method
 
 const deleteFAQ = async (req, res) => {
   try {

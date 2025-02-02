@@ -12,12 +12,9 @@ const translateText = async (text, targetLang) => {
 
 const autoTranslate = async (faq) => {
   const languages = ["hi", "bn", "mr"]; // codes for hindi , bengali and marathi
-  console.log("auto translate called");
+ 
   for (const lang of languages) {
-    faq.question.translations[lang] = await translateText(
-      faq.question.text,
-      lang
-    );
+    faq.question.translations[lang] = await translateText(faq.question.text,lang);
 
     faq.answer.translations[lang] = await translateText(faq.answer.text, lang);
   }

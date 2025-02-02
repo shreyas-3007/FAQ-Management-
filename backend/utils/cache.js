@@ -1,9 +1,8 @@
-import redis from '../config/redisClient.js';
-
-const CACHE_EXPIRY = 7200; // Cache expires in 2 hour
+const redis = require('../config/redisClient'); // Using CommonJS for import
+const CACHE_EXPIRY = 7200; // Cache expires in 2 hours
 
 // Get data from cache
-export const getCachedData = async (key) => {
+const getCachedData = async (key) => {
     try {
         const data = await redis.get(key);
         return data ? JSON.parse(data) : null;
@@ -14,7 +13,7 @@ export const getCachedData = async (key) => {
 };
 
 // Set data in cache
-export const setCachedData = async (key, value, expiry = CACHE_EXPIRY) => {
+const setCachedData = async (key, value, expiry = CACHE_EXPIRY) => {
     try {
         await redis.set(key, JSON.stringify(value), 'EX', expiry);
     } catch (error) {
@@ -22,11 +21,13 @@ export const setCachedData = async (key, value, expiry = CACHE_EXPIRY) => {
     }
 };
 
-// Clear cache
-export const clearCache = async (key) => {
+// Clear specific cache key
+const clearCache = async (key) => {
     try {
         await redis.del(key);
     } catch (error) {
         console.error('Redis Delete Error:', error);
     }
 };
+
+module.exports = { getCachedData, setCachedData, clearCache }; // Exporting methods using CommonJS

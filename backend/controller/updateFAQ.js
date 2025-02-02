@@ -1,23 +1,23 @@
 // Update FAQ with cache clearing and updating
 const Faq = require('../models/faqModel');
 const { autoTranslate } = require('../utils/translateText');
-const { setCachedData, clearCache } = require('../config/redisClient');  // import caching methods
+const { setCachedData, clearCache } = require('../utils/cache');  
 
 const updateFAQ = async (req, res) => {
   try {
-    const { id } = req.params; // Get FAQ ID from params
-    const { question, answer } = req.body; // Updated data
+    const { id } = req.params; 
+    const { question, answer } = req.body; 
 
     let faq = await Faq.findById(id);
     if (!faq) {
       return res.status(404).json({ success: false, message: "FAQ not found." });
     }
 
-    // Update only if provided
+   
     if (question) faq.question.text = question;
     if (answer) faq.answer.text = answer;
 
-    // Automatically translate updated fields
+    // translate updated fields
     const translatedFAQ = await autoTranslate(faq);
 
     // Save the updated FAQ
