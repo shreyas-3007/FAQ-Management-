@@ -13,13 +13,18 @@ const getCachedData = async (key) => {
 };
 
 // Set data in cache
+// Set data in cache (ensure it's always an array)
 const setCachedData = async (key, value, expiry = CACHE_EXPIRY) => {
     try {
-        await redis.set(key, JSON.stringify(value), 'EX', expiry);
+      if (!Array.isArray(value)) {
+        value = [value];  // Wrap in array if it is not already an array
+      }
+      await redis.set(key, JSON.stringify(value), 'EX', expiry);
     } catch (error) {
-        console.error('Redis Set Error:', error);
+      console.error('Redis Set Error:', error);
     }
-};
+  };
+  
 
 // Clear specific cache key
 const clearCache = async (key) => {

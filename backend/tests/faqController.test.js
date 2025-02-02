@@ -36,7 +36,7 @@ describe('FAQ API Tests', () => {
   
     for (const lang of languages) {
       const res = await request(app)
-        .get('/api/faq')
+        .get('/api/faqs')
         .query({lang});
   
     

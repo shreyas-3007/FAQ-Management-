@@ -1,0 +1,48 @@
+.faqForm {
+  max-width: 600px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.faqFormInput,
+.faqFormTextarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s;
+}
+
+.faqFormInput:focus,
+.faqFormTextarea:focus {
+  border-color: #5a67d8;
+  outline: none;
+}
+
+.faqFormTextarea {
+  height: 100px;
+  resize: none;
+}
+
+.faqFormButton {
+  padding: 12px;
+  background-color: #48bb78;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.faqFormButton:hover {
+  background-color: #2f855a;
+}

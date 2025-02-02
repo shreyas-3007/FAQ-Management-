@@ -1,27 +1,56 @@
 import { Link, useNavigate } from "react-router-dom";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { useContext, useRef, useState } from "react";
-//import Context from "../context";
-import styles from "../styles/Login.moudle.css";
+import { toast } from "react-toastify";
+import styles from "../styles/Login.module.css";
+import summaryApi from "../comman";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(true);
-  const [data, setData] = useState({email: "",password: ""});
-
+  const [data, setData] = useState({ username: "", password: "" });
+  const navigate = useNavigate();
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
-  const navigate = useNavigate();
-  // const { fetchUserDetails } = useContext(Context);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const email = emailRef.current.value;
+  
+    const username = emailRef.current.value;
     const password = passwordRef.current.value;
-
-    setData({email,password});
+  
+    if (!username || !password) {
+      toast.error("Please enter both username and password.");
+      return;
+    }
+  
+    console.log("Login attempt:", { username, password });
+  
+    try {
+      const dataResponse = await fetch(summaryApi.Login.url, {
+        method: summaryApi.Login.method,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }), // Use directly instead of state
+      });
+  
+      const dataApi = await dataResponse.json();
+  
+      if (dataApi.success) {
+        toast.success(dataApi.message);
+        console.log("Login successful");
+        navigate("/home");
+      } else {
+        toast.error(dataApi.error || "Login failed");
+        console.log("Login failed:", dataApi.error);
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      toast.error("Something went wrong, please try again.");
+    }
   };
+  
 
   return (
     <section className={styles.mainSectionLogin}>
@@ -34,7 +63,7 @@ const Login = () => {
               id="username"
               name="email"
               className={styles.username}
-              placeholder="Email"
+              placeholder="admin@gmail.com"
               required
               ref={emailRef}
             />
@@ -45,7 +74,7 @@ const Login = () => {
                 id="password"
                 className={styles.password}
                 name="password"
-                placeholder="Password"
+                placeholder="admin@123"
                 ref={passwordRef}
                 required
               />

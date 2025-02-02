@@ -2,71 +2,81 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
 }
 
 .loginContainer {
-  height: auto;
-  width: 30%;
+  width: 100%;
+  max-width: 400px;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
   text-align: center;
   margin-bottom: 20px;
+  color: #333;
 }
 
 .innerPage {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 form {
   display: flex;
   flex-direction: column;
+  gap: 15px;
 }
 
-.username {
-  padding: 10px;
-  margin-bottom: 15px;
+.username,
+.password {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  font-size: 16px;
 }
 
 .passwordContainer {
-  padding: 7px;
-  margin: 7px 0;
+  display: flex;
+  align-items: center;
   border: 1px solid #ccc;
   border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
+  padding: 0 10px;
 }
 
-.password {
+.passwordContainer input {
   border: none;
   outline: none;
-  width: 90%;
+  flex: 1;
+  padding: 12px;
 }
 
-.eyeIcon {
+.eyeContainer {
+  cursor: pointer;
   font-size: 20px;
+  color: #777;
 }
 
-.forgotPassword {
-  text-align: right;
-  margin-bottom: 7px;
-  text-decoration: none;
+.eyeContainer:hover {
+  color: #333;
 }
 
 button[type="submit"] {
-  padding: 10px 20px;
+  padding: 12px;
   background-color: #007bff;
-  color: #fff;
+  color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
   transition: background-color 0.3s ease;
 }
 
@@ -79,39 +89,28 @@ button[type="submit"]:hover {
   text-align: center;
 }
 
-.signinRedirect h6 a {
+.signinRedirect a {
   text-decoration: none;
+  color: #007bff;
 }
 
-.validationMessage {
-  display: none;
-  color: red;
-  margin-top: 5px;
+.signinRedirect a:hover {
+  text-decoration: underline;
 }
 
-
-/* Media Queries */
 @media (max-width: 768px) {
   .loginContainer {
-    width: 80%; /* Reduces container width for tablet-sized screens */
+    width: 90%;
   }
 }
 
 @media (max-width: 480px) {
-  .mainSectionLogin {
-    padding: 0 20px; /* Adds padding for smaller screens */
-  }
-  
   .loginContainer {
-    width: 100%; /* Full width for mobile screens */
+    width: 100%;
   }
 
   .passwordContainer {
     flex-direction: row;
     justify-content: space-between;
-  }
-
-  .forgotPassword {
-    font-size: 0.85em; /* Reduces font size on smaller screens */
   }
 }

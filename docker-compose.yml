@@ -1,0 +1,23 @@
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    networks:
+      - mern-network
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3000:3000"
+    networks:
+      - mern-network
+    environment:
+      - NODE_ENV=production
+
+networks:
+  mern-network:
+    driver: bridge

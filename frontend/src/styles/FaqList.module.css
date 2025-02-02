@@ -1,0 +1,28 @@
+/* src/styles/FaqList.module.css */
+.faqList {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.faqItem {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.faqItem h3 {
+  margin-top: 0;
+}
+
+.faqItemButton {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.faqItemButton:hover {
+  background-color: #c82333;
+}

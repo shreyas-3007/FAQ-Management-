@@ -9,6 +9,8 @@ const adminLogin = (req, res) => {
   try {
     const { username, password } = req.body; // Get username and password
 
+    console.log(username,password)
+
     // Validate credentials
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
       const payload = { username: ADMIN_USERNAME, role: "admin" }; // Token data
