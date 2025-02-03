@@ -10,7 +10,7 @@ import { ToastContainer } from "react-toastify";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App/>,
+    element: <App />,
     children: [
       {
         path: "/",

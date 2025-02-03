@@ -7,7 +7,7 @@ import style from "../styles/Home.module.css";
 
 function Home() {
   const [faqs, setFaqs] = useState([]);
-  const [language, setLanguage] = useState("en"); // Default language: English
+  const [language, setLanguage] = useState("en");
 
   useEffect(() => {
     fetchFaqs(language);
@@ -36,9 +36,6 @@ function Home() {
     <div className={style.home}>
       <h1>Admin Panel</h1>
       <h1>BharatFD FAQs Management</h1>
-      
-      {/* Language Selection Buttons */}
-     
 
       <FaqForm onFaqAdded={() => fetchFaqs(language)} />
 

@@ -14,17 +14,17 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const username = emailRef.current.value;
     const password = passwordRef.current.value;
-  
+
     if (!username || !password) {
       toast.error("Please enter both username and password.");
       return;
     }
-  
+
     console.log("Login attempt:", { username, password });
-  
+
     try {
       const dataResponse = await fetch(summaryApi.Login.url, {
         method: summaryApi.Login.method,
@@ -32,11 +32,11 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }), // Use directly instead of state
+        body: JSON.stringify({ username, password }),
       });
-  
+
       const dataApi = await dataResponse.json();
-  
+
       if (dataApi.success) {
         toast.success(dataApi.message);
         console.log("Login successful");
@@ -50,7 +50,6 @@ const Login = () => {
       toast.error("Something went wrong, please try again.");
     }
   };
-  
 
   return (
     <section className={styles.mainSectionLogin}>
