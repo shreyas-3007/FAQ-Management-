@@ -7,9 +7,9 @@ const getFAQ = async (req, res) => {
     const cacheKey = `faqs_${lang}`; // Language-specific cache key
     const cachedFAQs = await getCachedData(cacheKey);
 
-    // if (cachedFAQs) {
-    //   return res.status(200).json({ success: true, data: cachedFAQs });
-    // }
+    if (cachedFAQs) {
+      return res.status(200).json({ success: true, data: cachedFAQs });
+    }
 
     // If not cached, fetch from DB
     const faqs = await Faq.find();

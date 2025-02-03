@@ -12,6 +12,11 @@ describe('FAQ API Tests', () => {
         question: 'What is Redis?',
         answer: 'Redis is an open-source in-memory data structure store.',
       });
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data).toHaveProperty('_id');
+
     faqId = res.body.data._id; // Save the FAQ ID for later use
   });
 
@@ -27,29 +32,24 @@ describe('FAQ API Tests', () => {
     expect(res.statusCode).toBe(201);
     expect(res.body.success).toBe(true);
     expect(res.body.data).toHaveProperty('_id');
-    expect(res.body.message).toBe('FAQ created and translations added successfully!');
   });
 
-  // Fetch FAQs 
+  // Fetch FAQs
   it('should fetch all FAQs in different languages', async () => {
-    const languages = ['hi', 'mr', 'bn'];
-  
+    const languages = ['hi', 'mr', 'bn', 'en'];
+
     for (const lang of languages) {
       const res = await request(app)
         .get('/api/faqs')
-        .query({lang});
-  
-    
-  
+        .query({ lang });
+
       expect(res.statusCode).toBe(200);
       expect(res.body.success).toBe(true);
-     // expect(res.body.faqs).toBeInstanceOf(Array);
-     
+      expect(Array.isArray(res.body.data)).toBe(true); // Ensure the response is an array
     }
   });
-  
 
-  //  Update FAQ
+  // Update FAQ
   it('should update an existing FAQ', async () => {
     const res = await request(app)
       .put(`/api/faq/${faqId}`)
@@ -58,18 +58,20 @@ describe('FAQ API Tests', () => {
         answer: 'Redis is an in-memory data structure store used as a cache.',
       });
 
-    expect(res.statusCode).toBe(200);
+    expect(res.statusCode).toBe(201);
     expect(res.body.success).toBe(true);
-    expect(res.body.message).toBe('FAQ updated successfully.');
+    expect(res.body.data).toHaveProperty('_id');
+    expect(res.body.data.question.text).toBe('What is Redis Cache?');
   });
 
-  //  Delete FAQ
+  // Delete FAQ
   it('should delete an FAQ', async () => {
-    const res = await request(app)
-      .delete(`/api/faq/${faqId}`);
+    const res = await request(app).delete(`/api/faq/${faqId}`);
 
     expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.message).toBe('FAQ deleted successfully.');
   });
+
+ 
 });

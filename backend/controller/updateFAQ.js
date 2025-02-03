@@ -1,47 +1,51 @@
-const Faq = require("../models/faqModel");
-const { autoTranslate } = require("../utils/translateText");
-const { setCachedData, clearCache } = require("../utils/cache");
+const Faq = require('../models/faqModel');
+const { autoTranslate } = require('../utils/translateText');
+const { setCachedData } = require('../utils/cache');
 
-const updateFAQ = async (req, res) => {
+const createFAQ = async (req, res) => {
   try {
-    const { id } = req.params;
     const { question, answer } = req.body;
 
-    let faq = await Faq.findById(id);
-    if (!faq) {
-      return res
-        .status(404)
-        .json({ success: false, message: "FAQ not found." });
-    }
-
-    // Update the FAQ fields
-    if (question) faq.question.text = question;
-    if (answer) faq.answer.text = answer;
-
-    // Translate updated fields
-    const translatedFAQ = await autoTranslate(faq);
-
-    await translatedFAQ.save();
-
-    // Clear cache before re-caching the updated FAQ
-    await clearCache(`faq:${id}`);
-    await setCachedData(`faq:${id}`, translatedFAQ); // Cache the updated FAQ
-
-    res.json({
-      success: true,
-      message: "FAQ updated successfully.",
-      data: translatedFAQ,
+    // Create FAQ entry with only English text
+    const faq = new Faq({
+      question: {
+        text: question,
+        translations: { en: question },
+      },
+      answer: {
+        text: answer,
+        translations: { en: answer },
+      },
     });
+
+    await faq.save();
+
+    // Set cache immediately to show the data instantly
+    await setCachedData(`faq:${faq._id}`, faq);
+
+    // Respond to client immediately
+    res.status(201).json({
+      success: true,
+      data: faq,
+      message: 'FAQ created successfully! Translations will be added soon.',
+    });
+
+    // Perform translations asynchronously
+    autoTranslate(faq)
+      .then(async (translatedFaq) => {
+        await Faq.findByIdAndUpdate(faq._id, translatedFaq);
+        await setCachedData(`faq:${faq._id}`, translatedFaq); // Update cache
+      })
+      .catch((error) => console.error('Error translating FAQ:', error));
+
   } catch (error) {
-    console.error("Error updating FAQ:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Error updating FAQ.",
-        error: error.message,
-      });
+    console.error('Error creating FAQ:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error creating FAQ.',
+      error: error.message,
+    });
   }
 };
 
-module.exports = updateFAQ;
+module.exports = createFAQ;
